@@ -44,7 +44,7 @@ class InitData:
 
     # we are updating outside of a tx
     def transfer(self, source_account, target_account, value):
-        print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
+        # print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
         with self.client.start_session() as ses:
             ses.start_transaction()
             self.accounts.update_one({'account_id': source_account}, {'$inc': {'balance': value*(-1)} })
@@ -59,7 +59,7 @@ class InitData:
 
     # transfer using a tx
     def tx_transfer(self, source_account, target_account, value):
-        print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
+        # print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
         with self.client.start_session() as ses:
             ses.start_transaction()
             self.accounts.update_one({'account_id': source_account}, {'$inc': {'balance': value*(-1)} }, session=ses)
@@ -68,7 +68,7 @@ class InitData:
 
     # validating errors, not using the tx session
     def tx_transfer_err(self, source_account, target_account, value):
-        print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
+        # print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
         with self.client.start_session() as ses:
             ses.start_transaction()
             res = self.accounts.update_one({'account_id': source_account}, {'$inc': {'balance': value*(-1)} }, session=ses)
@@ -76,14 +76,14 @@ class InitData:
             error_tx = self.__validate_transfer(source_account, target_account)
 
             if error_tx['status'] == True:
-                print(f"cant transfer {value} Hypnotons from {source_account} ({error_tx['s_bal']}) to {target_account} ({error_tx['t_bal']})")
+                # print(f"cant transfer {value} Hypnotons from {source_account} ({error_tx['s_bal']}) to {target_account} ({error_tx['t_bal']})")
                 ses.abort_transaction()
             else:
                 ses.commit_transaction()
 
     # validating errors, using the tx session
     def tx_transfer_err_ses(self, source_account, target_account, value):
-        print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
+        # print(f'transferring {value} Hypnotons from {source_account} to {target_account}')
         with self.client.start_session() as ses:
             ses.start_transaction()
             res = self.accounts.update_one({'account_id': source_account}, {'$inc': {'balance': value * (-1)}},
@@ -93,7 +93,7 @@ class InitData:
             error_tx = self.__validate_transfer_ses(source_account, target_account, ses)
 
             if error_tx['status'] == True:
-                print(f"cant transfer {value} Hypnotons from {source_account} ({error_tx['s_bal']}) to {target_account} ({error_tx['t_bal']})")
+                # print(f"cant transfer {value} Hypnotons from {source_account} ({error_tx['s_bal']}) to {target_account} ({error_tx['t_bal']})")
                 ses.abort_transaction()
             else:
                 ses.commit_transaction()
